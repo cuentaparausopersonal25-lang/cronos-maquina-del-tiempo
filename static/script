@@ -1,0 +1,64 @@
+const epocas = {};
+let destinoActual = null;
+
+document.querySelectorAll(".destination-card").forEach(card => {
+  const button = card.querySelector(".explore-button");
+  button.addEventListener("click", async () => {
+    try {
+      const response = await fetch("/api/epocas");
+      if (!response.ok) throw new Error("No se pudo cargar el destino.");
+      const data = await response.json();
+      destinoActual = data.find(item => item.id === button.dataset.epoch);
+      if (!destinoActual) throw new Error("No encontramos ese destino.");
+      abrirModal(destinoActual);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+});
+
+function abrirModal(epoca) {
+  document.getElementById("modal-date").textContent = epoca.fecha.toUpperCase();
+  document.getElementById("modal-emoji").textContent = epoca.emoji;
+  document.getElementById("modal-title").textContent = epoca.titulo;
+  document.getElementById("modal-description").textContent = epoca.descripcion;
+  document.getElementById("modal-mission").textContent = epoca.mision;
+  document.getElementById("modal-facts").innerHTML = "";
+  epoca.datos.forEach(dato => {
+    const li = document.createElement("li");
+    li.textContent = dato;
+    document.getElementById("modal-facts").appendChild(li);
+  });
+  document.getElementById("mission-answer").value = "";
+  document.getElementById("mission-result").textContent = "";
+  document.getElementById("modal").classList.add("open");
+  document.getElementById("modal").setAttribute("aria-hidden", "false");
+}
+
+function cerrarModal() {
+  document.getElementById("modal").classList.remove("open");
+  document.getElementById("modal").setAttribute("aria-hidden", "true");
+}
+
+document.getElementById("closeModal").addEventListener("click", cerrarModal);
+document.getElementById("modal").addEventListener("click", event => {
+  if (event.target.id === "modal") cerrarModal();
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") cerrarModal();
+});
+
+document.getElementById("mission-form").addEventListener("submit", event => {
+  event.preventDefault();
+  if (!destinoActual) return;
+  const respuesta = document.getElementById("mission-answer").value.trim().toLocaleLowerCase("es");
+  const correcta = destinoActual.respuesta.toLocaleLowerCase("es");
+  const resultado = document.getElementById("mission-result");
+  if (respuesta === correcta) {
+    resultado.textContent = "¡Correcto! Misión completada. ✨";
+    resultado.style.color = "#8de0b5";
+  } else {
+    resultado.textContent = "Todavía no. ¡Probá otra vez!";
+    resultado.style.color = "#ffb58e";
+  }
+});

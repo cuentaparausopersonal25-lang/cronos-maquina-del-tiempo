@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Viajá por distintas épocas de la historia con la Máquina del Tiempo.">
+  <title>CRONOS | Máquina del Tiempo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-icon">◷</span> CRONOS</a>
+    <nav><a href="#viajes">Viajes</a><a href="#como-funciona">Cómo funciona</a></nav>
+    <a class="top-cta" href="#viajes">Empezar a viajar <span>↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> SISTEMA TEMPORAL ACTIVADO</div>
+        <h1>El pasado te<br>está <em>esperando.</em></h1>
+        <p>Seis destinos. Miles de años. Una sola máquina. Elegí una época y comenzá tu viaje por la historia.</p>
+        <a class="primary-button" href="#viajes">Elegir mi destino <span>→</span></a>
+        <div class="hero-note"><span>✦</span> Aprendé explorando. La aventura empieza ahora.</div>
+      </div>
+      <div class="time-art" aria-label="Ilustración de un portal temporal">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="portal"><div class="portal-inner"><span>◷</span></div></div>
+        <div class="floating f1">25 MAY 1810</div>
+        <div class="floating f2">AÑO 3000</div>
+        <div class="floating f3">2600 a. C.</div>
+        <div class="coordinates">34°36' S<br>58°22' O<br><small>COORDENADAS TEMPORALES</small></div>
+      </div>
+      <div class="hero-bottom"><span>01 / EXPLORÁ EL TIEMPO</span><span>DESLIZÁ PARA DESCUBRIR ↓</span></div>
+    </section>
+
+    <section class="intro" id="como-funciona">
+      <div class="section-kicker">TU HISTORIA COMIENZA ACÁ</div>
+      <h2>No leas la historia.<br><em>Vivila.</em></h2>
+      <p>Elegí un destino, explorá sus secretos y completá una misión para demostrar lo que descubriste.</p>
+      <div class="steps">
+        <div><b>01</b><strong>Elegí una época</strong><span>Seleccioná uno de nuestros destinos temporales.</span></div>
+        <div><b>02</b><strong>Explorá el mundo</strong><span>Conocé datos, lugares y acontecimientos.</span></div>
+        <div><b>03</b><strong>Completá la misión</strong><span>Respondé una pregunta y poné a prueba tus conocimientos.</span></div>
+      </div>
+    </section>
+
+    <section class="destinations" id="viajes">
+      <div class="dest-head">
+        <div><div class="section-kicker">SELECCIONÁ TU DESTINO</div><h2>La línea del <em>tiempo.</em></h2></div>
+        <span class="dest-count">06 DESTINOS DISPONIBLES</span>
+      </div>
+      <div class="cards">
+        {% for epoca in epocas %}
+        <article class="destination-card {{ epoca.color }}">
+          <div class="card-top"><span>{{ "%02d"|format(loop.index) }} / DESTINO</span><span>{{ epoca.emoji }}</span></div>
+          <div class="card-visual"><div class="visual-symbol">{{ epoca.emoji }}</div><div class="visual-ring"></div></div>
+          <div class="card-info">
+            <span class="date">{{ epoca.fecha }}</span>
+            <h3>{{ epoca.titulo }}</h3>
+            <p>{{ epoca.periodo }}</p>
+            <button class="explore-button" data-epoch="{{ epoca.id }}">Explorar destino <span>↗</span></button>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="quote">
+      <span>“</span>
+      <p>El pasado explica quiénes somos.<br>El futuro depende de lo que hagamos hoy.</p>
+      <small>— ARCHIVO CRONOS</small>
+    </section>
+  </main>
+
+  <footer><a class="brand" href="/"><span class="brand-icon">◷</span> CRONOS</a><span>Una aventura por el tiempo · Proyecto educativo</span><span>© 2026 CRONOS</span></footer>
+
+  <div class="modal-backdrop" id="modal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="close-modal" id="closeModal" aria-label="Cerrar">×</button>
+      <div class="modal-kicker" id="modal-date">DESTINO TEMPORAL</div>
+      <div class="modal-emoji" id="modal-emoji">⌛</div>
+      <h2 id="modal-title">Tu destino</h2>
+      <p id="modal-description"></p>
+      <h3>ARCHIVO HISTÓRICO</h3>
+      <ul id="modal-facts"></ul>
+      <div class="mission">
+        <span>DESAFÍO DEL VIAJERO</span>
+        <p id="modal-mission"></p>
+        <form id="mission-form"><input id="mission-answer" placeholder="Escribí tu respuesta..." autocomplete="off" required><button type="submit">Comprobar →</button></form>
+        <div id="mission-result" role="status"></div>
+      </div>
+    </section>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
